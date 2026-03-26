@@ -1,17 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { songsDB } from "@/lib/db";
-import { Song, ApiResponse } from "@/types";
 
-// Helper untuk mencari index lagu
-const findSongIndex = (id: string) =>
-  songsDB.findIndex((song) => song.id === id);
+// Definisi tipe params sebagai Promise (Wajib di Next.js 15/16)
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
 
-// GET: Mengambil satu lagu berdasarkan ID
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } },
-) {
-  const song = songsDB.find((s) => s.id === params.id);
+// GET Detail
+export async function GET(request: NextRequest, context: RouteContext) {
+  const { id } = await context.params;
+  const song = songsDB.find((s) => s.id === id);
 
   if (!song) {
     return NextResponse.json(
@@ -20,22 +18,17 @@ export async function GET(
     );
   }
 
-  return NextResponse.json(
-    {
-      status: "success",
-      message: "Lagu ditemukan",
-      data: song,
-    },
-    { status: 200 },
-  );
+  return NextResponse.json({
+    status: "success",
+    message: "Lagu ditemukan",
+    data: song,
+  });
 }
 
-// PUT: Memperbarui data lagu
-export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } },
-) {
-  const index = findSongIndex(params.id);
+// PUT Update
+export async function PUT(request: NextRequest, context: RouteContext) {
+  const { id } = await context.params;
+  const index = songsDB.findIndex((s) => s.id === id);
 
   if (index === -1) {
     return NextResponse.json(
@@ -46,18 +39,13 @@ export async function PUT(
 
   try {
     const body = await request.json();
+    songsDB[index] = { ...songsDB[index], ...body, id };
 
-    // Update data (hanya update field yang dikirim)
-    songsDB[index] = { ...songsDB[index], ...body, id: params.id };
-
-    return NextResponse.json(
-      {
-        status: "success",
-        message: "Lagu berhasil diperbarui",
-        data: songsDB[index],
-      },
-      { status: 200 },
-    );
+    return NextResponse.json({
+      status: "success",
+      message: "Lagu berhasil diperbarui",
+      data: songsDB[index],
+    });
   } catch (error) {
     return NextResponse.json(
       { status: "error", message: "Format data tidak valid" },
@@ -66,12 +54,10 @@ export async function PUT(
   }
 }
 
-// DELETE: Menghapus lagu
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } },
-) {
-  const index = findSongIndex(params.id);
+// DELETE
+export async function DELETE(request: NextRequest, context: RouteContext) {
+  const { id } = await context.params;
+  const index = songsDB.findIndex((s) => s.id === id);
 
   if (index === -1) {
     return NextResponse.json(
@@ -81,12 +67,8 @@ export async function DELETE(
   }
 
   songsDB.splice(index, 1);
-
-  return NextResponse.json(
-    {
-      status: "success",
-      message: "Lagu berhasil dihapus",
-    },
-    { status: 200 },
-  );
+  return NextResponse.json({
+    status: "success",
+    message: "Lagu berhasil dihapus",
+  });
 }
