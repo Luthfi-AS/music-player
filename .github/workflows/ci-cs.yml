@@ -34,12 +34,15 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Run NPM Audit (Vulnerability Scan)
-        run: npm audit --audit-level=high
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
 
-      # Opsional: Menggunakan Tool Security Scan Tambahan (Snyk)
-      - name: Node Security Scan
-        uses: nodejs/security-wg-vuln-checker@v1
+      - name: Run Security Audit
+        # Ini akan memeriksa celah keamanan pada semua library (dependencies) kamu
+        run: npm audit --audit-level=high
 
   # JOB 3: Docker Build Check
   docker-build:
