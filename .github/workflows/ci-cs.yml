@@ -1,4 +1,4 @@
-name: Music Player CI/CS Pipeline
+name: Music Player CI&CS Pipeline
 
 # Workflow berjalan saat ada Push atau Pull Request ke branch utama
 on:
