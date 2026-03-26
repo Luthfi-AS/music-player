@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎵 Music Player REST API
 
-## Getting Started
+![Build Status](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-brightgreen)
+![Node Version](https://img.shields.io/badge/Node-20-blue)
+![Docker Ready](https://img.shields.io/badge/Docker-Ready-blue)
 
-First, run the development server:
+## 1. Deskripsi Project
+**Music Player API** adalah layanan *backend* berbasis RESTful yang dikembangkan untuk mengelola koleksi lagu secara digital. API ini memungkinkan pengguna melakukan operasi **CRUD** (Create, Read, Update, Delete) pada data lagu secara efisien.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Project ini menggunakan teknologi terkini untuk menjamin skalabilitas dan keamanan:
+* **Framework**: Next.js 16 (App Router)
+* **Language**: TypeScript (Type-safe)
+* **Testing**: Jest & ts-jest
+* **Containerization**: Docker & Docker Compose
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 2. Dokumentasi API
+**Base URL**: `http://localhost:3000/api`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Endpoint List
+| Method | Endpoint | Deskripsi |
+| :--- | :--- | :--- |
+| **GET** | `/songs` | Mengambil seluruh daftar lagu |
+| **POST** | `/songs` | Menambahkan lagu baru ke koleksi |
+| **GET** | `/songs/[id]` | Mengambil detail spesifik satu lagu |
+| **PUT** | `/songs/[id]` | Memperbarui data lagu berdasarkan ID |
+| **DELETE** | `/songs/[id]` | Menghapus lagu dari koleksi |
 
-## Learn More
+### Format Response
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+#### **Success (200 OK / 201 Created)**
+```json
+{
+  "status": "success",
+  "message": "Lagu ditemukan",
+  "data": {
+    "id": "1",
+    "title": "Yellow",
+    "artist": "Coldplay",
+    "album": "Parachutes",
+    "duration": 269
+  }
+}
